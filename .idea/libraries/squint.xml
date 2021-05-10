@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="squint">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/squintV2.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
