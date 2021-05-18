@@ -9,16 +9,23 @@ import java.io.File;
 
 public class ImageViewer extends GUIManager {
     private final int WINDOW_WIDTH  = 500, WINDOW_HEIGHT = 600;
+    private String mode;
 
     // A slider to control the number of brightness levels used
     private JSlider leveler = new JSlider( 1, 256, 256 );
-    private JLabel levelerLabel = new JLabel( "Brightness levels: " + leveler.getValue() );
+    private JLabel levelerLabel = new JLabel( "Slider level: " + leveler.getValue() );
 
     // Button to request loading a new image
     private JButton loadImage = new JButton( "Load Image" );
 
+    // Button to move to brightness-adjusting mode
+    private JButton brightnessMode = new JButton( "Adjust Brightness" );
+
+    // Button to move to quantization mode
+    private JButton quantizeMode = new JButton("Quantize");
+
     // Dialog box used to select an image to load
-    private JFileChooser chooser = new JFileChooser( new File( System.getProperty("user.dir")) );
+    private JFileChooser chooser = new JFileChooser( new File( System.getProperty("user.dir") + "/AllImages") );
 
     // The underlying picture to be displayed
     private SImage picture;
@@ -32,6 +39,7 @@ public class ImageViewer extends GUIManager {
     public ImageViewer() {
         // Create window to hold all the components
         this.createWindow( WINDOW_WIDTH, WINDOW_HEIGHT );
+        mode = "";
 
         contentPane.setLayout( new BorderLayout() );
         contentPane.add( new JScrollPane( displayImage ), BorderLayout.CENTER );
@@ -45,13 +53,23 @@ public class ImageViewer extends GUIManager {
         controlPane.add( levelerPane );
 
         controlPane.add( loadImage );
+        controlPane.add( brightnessMode );
+        controlPane.add( quantizeMode );
+
 
         contentPane.add( controlPane, BorderLayout.SOUTH );
     }
 
     // Adjust image display when slider is moved
     public void sliderChanged() {
+        int sliderValue = leveler.getValue();
+        levelerLabel.setText("Slider level: " + sliderValue);
+        int[][] pixels = picture.getPixelArray();
 
+
+
+        displayed = new SImage(pixels);
+        displayImage.setIcon(displayed);
     }
 
 
@@ -62,6 +80,12 @@ public class ImageViewer extends GUIManager {
             if ( chooser.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION ) {
                 setPic( new SImage( chooser.getSelectedFile().getAbsolutePath() ) );
             }
+        }
+        else if ( which == brightnessMode ) {
+            mode = "brightness";
+        }
+        else if (which == quantizeMode) {
+            mode = "quantize";
         }
     }
 
